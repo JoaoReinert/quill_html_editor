@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
 import 'package:quill_html_editor/src/constants/image_constants.dart';
+import 'package:quill_html_editor/src/utils/color_picker_default.dart';
 import 'package:quill_html_editor/src/utils/hex_color.dart';
 import 'package:quill_html_editor/src/widgets/color_picker.dart';
 import 'package:quill_html_editor/src/widgets/image_picker.dart';
@@ -566,16 +567,45 @@ class ToolBarState extends State<ToolBar> {
                   child: _alignDD()),
             )));
       } else if (toolbarItem.style == ToolBarStyle.color) {
-        tempToolBarList.add(Tooltip(
+        tempToolBarList.add(
+          Tooltip(
             waitDuration: const Duration(milliseconds: 800),
             message: toolbarItem.style.name,
             child: Padding(
               padding: _buttonPadding,
               child: SizedBox(
-                  width: widget.iconSize,
-                  height: widget.iconSize,
-                  child: _getFontColorWidget(i)),
-            )));
+                width: widget.iconSize,
+                height: widget.iconSize,
+                child: ButtonSelectColor(
+                  color:
+                      (_formatMap['color'] != '' && _formatMap['color'] != null)
+                          ? HexColor.fromHex(_formatMap['color'])
+                          : Colors.black,
+                  onTap: (tap) async {
+                    final color = await colorPickerDefault(
+                      context,
+                      tap: tap,
+                      color: (_formatMap['color'] != '' &&
+                              _formatMap['color'] != null)
+                          ? HexColor.fromHex(_formatMap['color'])
+                          : Colors.black,
+                    );
+
+                    _formatMap['color'] = color.toHex();
+                    _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+                    widget.controller
+                        .setFormat(format: 'color', value: _formatMap['color']);
+                    setState(() {});
+                    if (_fontColorKey.currentState != null) {
+                      _fontColorKey.currentState!.hideOverlay();
+                    }
+                  },
+                  title: _formatMap['color'].toString(),
+                ),
+              ),
+            ),
+          ),
+        );
       } else if (toolbarItem.style == ToolBarStyle.video) {
         tempToolBarList.add(Tooltip(
             waitDuration: const Duration(milliseconds: 800),
@@ -626,9 +656,36 @@ class ToolBarState extends State<ToolBar> {
             child: Padding(
               padding: _buttonPadding,
               child: SizedBox(
-                  width: widget.iconSize,
-                  height: widget.iconSize,
-                  child: _getFontBackgroundColorWidget(i)),
+                width: widget.iconSize,
+                height: widget.iconSize,
+                child: ButtonSelectColor(
+                  isBackground: true,
+                  color:
+                  (_formatMap['background'] != '' && _formatMap['background'] != null)
+                      ? HexColor.fromHex(_formatMap['background'])
+                      : Colors.black,
+                  onTap: (tap) async {
+                    final color = await colorPickerDefault(
+                      context,
+                      tap: tap,
+                      color: (_formatMap['background'] != '' &&
+                          _formatMap['background'] != null)
+                          ? HexColor.fromHex(_formatMap['background'])
+                          : Colors.black,
+                    );
+
+                    _formatMap['background'] = color.toHex();
+                    _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
+                    widget.controller
+                        .setFormat(format: 'background', value: _formatMap['background']);
+                    setState(() {});
+                    if (_fontColorKey.currentState != null) {
+                      _fontColorKey.currentState!.hideOverlay();
+                    }
+                  },
+                  title: _formatMap['background'].toString(),
+                ),
+              ),
             )));
       } else if (toolbarItem.style == ToolBarStyle.addTable) {
         tempToolBarList.add(Tooltip(
@@ -962,6 +1019,9 @@ class ToolBarState extends State<ToolBar> {
       key: _fontColorKey,
       content: ColorPicker(
         onColorPicked: (color) {
+          print("ççç");
+          print(color);
+
           _formatMap['color'] = color;
           _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
           widget.controller
