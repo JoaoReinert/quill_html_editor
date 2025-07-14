@@ -663,7 +663,7 @@ class ToolBarState extends State<ToolBar> {
                   color:
                   (_formatMap['background'] != '' && _formatMap['background'] != null)
                       ? HexColor.fromHex(_formatMap['background'])
-                      : Colors.black,
+                      : Colors.transparent,
                   onTap: (tap) async {
                     final color = await colorPickerDefault(
                       context,
@@ -671,7 +671,7 @@ class ToolBarState extends State<ToolBar> {
                       color: (_formatMap['background'] != '' &&
                           _formatMap['background'] != null)
                           ? HexColor.fromHex(_formatMap['background'])
-                          : Colors.black,
+                          : Colors.transparent,
                     );
 
                     _formatMap['background'] = color.toHex();
@@ -1019,9 +1019,6 @@ class ToolBarState extends State<ToolBar> {
       key: _fontColorKey,
       content: ColorPicker(
         onColorPicked: (color) {
-          print("ççç");
-          print(color);
-
           _formatMap['color'] = color;
           _toolbarList[i] = _toolbarList[i].copyWith(isActive: true);
           widget.controller

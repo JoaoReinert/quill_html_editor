@@ -27,6 +27,15 @@ Future<Color> colorPickerDefault(
           child: Card(
             child: Column(
               children: [
+                // TextButton(
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                //   child: Text(
+                //     'X',
+                //     style: TextStyle(color: Color.fromRGBO(42, 96, 232, 1)),
+                //   ),
+                // ),
                 _MultiColorPicker(colorSelect: color),
                 InkWell(
                   onTap: () async {
@@ -68,6 +77,7 @@ Future<Color?> colorPickerSquare(BuildContext context, Color color) async {
                   width: 450,
                   height: 500,
                   child: Card(
+                    color: Colors.white,
                     child: Column(
                       children: [
                         const Row(
